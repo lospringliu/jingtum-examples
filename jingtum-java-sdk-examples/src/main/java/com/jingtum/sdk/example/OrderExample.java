@@ -33,8 +33,9 @@ import com.jingtum.exception.ChannelException;
 import com.jingtum.exception.FailedException;
 import com.jingtum.exception.InvalidParameterException;
 import com.jingtum.exception.InvalidRequestException;
+import com.jingtum.model.FinGate;
 import com.jingtum.model.Wallet;
-import com.jingtum.model.JingtumAmount;
+import com.jingtum.model.Amount;
 import com.jingtum.model.OrderBook;
 import com.jingtum.model.OrderBookCollection;
 import com.jingtum.model.OrderBookResult;
@@ -51,15 +52,15 @@ public class OrderExample {
 
 		System.out.println("---------挂单---------");
 		Wallet wallet = new Wallet("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa","snqFcHzRe22JTM8j7iZVpQYzxEEbW"); //根据钱包地址和密钥生成钱包实例
-		JingtumAmount pay = new JingtumAmount(); //构建JingtumCurrency 实例/支付的通
+		Amount pay = new Amount(); //构建JingtumCurrency 实例/支付的通
 		pay.setCounterparty(""); //Currency counter party
 		pay.setCurrency(Jingtum.getCurrencySWT()); //单位
 		pay.setValue(1); //数量
-		JingtumAmount get = new JingtumAmount(); //挂单得到的通
+		Amount get = new Amount(); //挂单得到的通
 		get.setCounterparty("janxMdrWE2SUzTqRUtfycH4UGewMMeHa9f"); //counterparty
 		get.setCurrency(Jingtum.getCurrencyCNY()); //currency
 		get.setValue(2);
-		RequestResult od = wallet.putOrder(Order.OrderType.sell, pay, get, true); //挂单，参数为：挂单类型，支付的currency，获得的currency，是否等待交易结果返回
+		RequestResult od = wallet.createOrder(Order.OrderType.sell, pay, get, true); //挂单，参数为：挂单类型，支付的currency，获得的currency，是否等待交易结果返回
 		//wallet.asyncPutOrder(Order.OrderType.sell, pay, get); 或者直接调用异步同步方法
 		//wallet.syncPutOrder(Order.OrderType.sell, pay, get);
 		System.out.println(od.getFee()); //交易的手续费
@@ -79,7 +80,7 @@ public class OrderExample {
 		
 		System.out.println("---------获取全部挂单---------");
 		Wallet wallet2 = new Wallet("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa","snqFcHzRe22JTM8j7iZVpQYzxEEbW"); 
-		OrderCollection oc = wallet2.getOrders(); //获取所有挂单
+		OrderCollection oc = wallet2.getOrderList(); //获取所有挂单
 		Order od_3;
 		Iterator<Order> it_3 = oc.getData().iterator();
 		Integer k = 0;
@@ -102,7 +103,7 @@ public class OrderExample {
 		System.out.println("---------根据hash值获取挂单---------");
 		Wallet wallet3 = new Wallet("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa","snqFcHzRe22JTM8j7iZVpQYzxEEbW");
 		
-		Order od_5 = wallet3.getOrderByID("C05613A5A956FF98DFAB8EFD12A0BC91D862C735E9C8FFF8B500811EDA1DB2BB"); //根据hash值获得挂单
+		Order od_5 = wallet3.getOrder("C05613A5A956FF98DFAB8EFD12A0BC91D862C735E9C8FFF8B500811EDA1DB2BB"); //根据hash值获得挂单
 		System.out.println(od_5.getSuccess()); //请求结果
 		System.out.println(od_5.getHash()); //交易hash
 		System.out.println(od_5.getValidated()); //交易服务器状态
@@ -120,16 +121,16 @@ public class OrderExample {
 		System.out.println(od_5.getType()); //交易类型，sell或buy
 		System.out.println(od_5.getSequence());	//交易序列号
 		
-		System.out.println("---------获取Orderbook/市场深度---------");
-		JingtumAmount base = new JingtumAmount(); //基准货币（currency+counterparty）
+		System.out.println("---------获得货币对的挂单列表(市场深度)---------");
+		Amount base = new Amount(); //基准货币（currency+counterparty）
 		base.setCurrency(Jingtum.getCurrencyCNY());
 		base.setCounterparty("jBciDE8Q3uJjf111VeiUNM775AMKHEbBLS");
 		
-		JingtumAmount counter = new JingtumAmount(); //目标货币（currency+counterparty）
+		Amount counter = new Amount(); //目标货币（currency+counterparty）
 		counter.setCurrency(Jingtum.getCurrencyUSD());
 		counter.setCounterparty("jBciDE8Q3uJjf111VeiUNM775AMKHEbBLS");
 		
-		OrderBookResult oBR = wallet2.getOrderBook(base, counter);
+		OrderBookResult oBR = FinGate.getInstance().getOrderBook(base, counter);
 		
 		System.out.println(oBR.getOrderbook()); //挂单货币对
 		System.out.println(oBR.getSuccess());

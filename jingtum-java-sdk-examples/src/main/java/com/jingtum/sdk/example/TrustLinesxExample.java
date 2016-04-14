@@ -44,9 +44,9 @@ import com.jingtum.model.TrustLineCollection;
 public class TrustLinesxExample {
 	public static void main(String[] args) throws AuthenticationException, InvalidRequestException, APIConnectionException, APIException, ChannelException, NoSuchAlgorithmException, InvalidParameterException, FailedException {
 
-		System.out.println("---------获取授信---------");
+		System.out.println("---------获取信任---------");
 		Wallet wallet1 = new Wallet("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa","snqFcHzRe22JTM8j7iZVpQYzxEEbW"); //根据地址和密钥生成钱包，如只为获取全部授信，密钥可为空
-		TrustLineCollection tlc = wallet1.getTrustLine("CNY",null); //信任通，信任发行者，信任额度
+		TrustLineCollection tlc = wallet1.getTrustLineList("CNY",null); //信任通，信任发行者，信任额度
 		//tlc = wallet1.getTrustLine(); //不带参数
 		TrustLine tl1;
 		
@@ -63,23 +63,23 @@ public class TrustLinesxExample {
 	
 		}
 		
-		System.out.println("---------增加授信---------");
+		System.out.println("---------增加信任---------");
 		Wallet wallet2 = new Wallet("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa","snqFcHzRe22JTM8j7iZVpQYzxEEbW"); //增加授信密钥为必需值，否则提交会失败
 		TrustLine trustline = new TrustLine(); //构建信任实例
 		trustline.setCounterparty("jMhLAPaNFo288PNo5HMC37kg6ULjJg8vPf");
 		trustline.setCurrency(Jingtum.getCurrencyUSD());
-		trustline.setLimit(Jingtum.getDefaultTrustLimit());
+		trustline.setLimit(200);
 		RequestResult pr = wallet2.addTrustLine(trustline, true);
 		System.out.println(pr.getSuccess());
 		System.out.println(pr.getHash());
 		System.out.println(pr.getState());
 		
-		System.out.println("---------删除授信---------");
+		System.out.println("---------删除信任---------");
 		Wallet wallet3 = new Wallet("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa","snqFcHzRe22JTM8j7iZVpQYzxEEbW"); 
 		TrustLine trustline2 = new TrustLine();
 		trustline2.setCounterparty("jMhLAPaNFo288PNo5HMC37kg6ULjJg8vPf");
 		trustline2.setCurrency(Jingtum.getCurrencyUSD());
-		RequestResult pr2 = wallet3.deleteTrustLine(trustline2, true);
+		RequestResult pr2 = wallet3.removeTrustLine(trustline2, true);
 		System.out.println(pr2.getSuccess());
 		System.out.println(pr2.getHash());
 		System.out.println(pr2.getState());

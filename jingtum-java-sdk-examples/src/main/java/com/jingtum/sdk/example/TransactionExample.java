@@ -46,7 +46,7 @@ public class TransactionExample {
 		Transaction tran;
 		
 		System.out.println("---------获取所有transaction---------");
-		TransactionCollection tc = wallet.getTransactions(null,false,Transaction.DirectionType.all,1,2); //参数为：支付交易的接收方地址，是否移除失败的交易历史，支付交易的方向，incoming或outgoing
+		TransactionCollection tc = wallet.getTransactionList(null,false,Transaction.DirectionType.all,1,2); //参数为：支付交易的接收方地址，是否移除失败的交易历史，支付交易的方向，incoming或outgoing
 		//TransactionCollection tc = wallet.getTransactions(); 或者不加过滤条件，获取所有
 		Iterator<Transaction> it1 = tc.getData().iterator();
 		Integer i = 0;
@@ -80,7 +80,7 @@ public class TransactionExample {
 		}
 		
 		System.out.println("---------根据hash获取transaction---------");
-		tran = wallet.getTransactionByID("9937AA23F6B4B11674A9696F16BE62C947DAFA92D464DDDF26B26B9BE0CA178B"); //参数：hash值
+		tran = wallet.getTransaction("9937AA23F6B4B11674A9696F16BE62C947DAFA92D464DDDF26B26B9BE0CA178B"); //参数：hash值
 		System.out.println(tran.getType());
 		System.out.println(tran.getClient_resource_id());
 		System.out.println(tran.getCounterparty());

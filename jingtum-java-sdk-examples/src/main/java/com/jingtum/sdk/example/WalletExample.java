@@ -33,11 +33,11 @@ import com.jingtum.exception.FailedException;
 import com.jingtum.exception.InvalidParameterException;
 import com.jingtum.exception.InvalidRequestException;
 import com.jingtum.model.Wallet;
-import com.jingtum.util.Utility;
 import com.jingtum.model.BalanceCollection;
 import com.jingtum.model.Balance;
-import com.jingtum.model.JingtumAmount;
-import com.jingtum.model.JingtumCurrency;
+import com.jingtum.model.FinGate;
+import com.jingtum.model.Amount;
+import com.jingtum.model.Currency;
 import com.jingtum.model.Payment;
 import com.jingtum.model.PaymentCollection;
 import com.jingtum.model.RequestResult;
@@ -49,16 +49,16 @@ import com.jingtum.model.RequestResult;
 public class WalletExample {
 	public static void main(String[] args) throws AuthenticationException, InvalidRequestException, APIConnectionException, APIException, ChannelException, NoSuchAlgorithmException, InvalidParameterException, FailedException {
 		
-		JingtumCurrency usd = new JingtumCurrency(Jingtum.getCurrencyUSD(),"jBciDE8Q3uJjf111VeiUNM775AMKHEbBLS");
+		Currency usd = new Currency(Jingtum.getCurrencyUSD(),"jBciDE8Q3uJjf111VeiUNM775AMKHEbBLS");
 		
 		System.out.println("---------创建 Wallet---------");
-		Wallet wallet = Wallet.create(); //创建新钱包，静态方法
+		Wallet wallet = FinGate.getInstance().createWallet(); //创建新钱包，静态方法
 		System.out.println(wallet.getAddress()); //钱包地址
 		System.out.println(wallet.getSecret()); //钱包密钥
 		
 		System.out.println("---------激活 Wallet---------");
-		Jingtum.setGateWay("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa", "snqFcHzRe22JTM8j7iZVpQYzxEEbW"); //激活钱包的发送SWT方
-		boolean isActivated = Utility.activateWallet(wallet.getAddress());
+		FinGate.getInstance().setFinGate("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa", "snqFcHzRe22JTM8j7iZVpQYzxEEbW"); //激活钱包的发送SWT方
+		boolean isActivated = FinGate.getInstance().activateWallet(wallet.getAddress());
 		System.out.println(isActivated);
 		
 		System.out.println("---------获取 Wallet balance---------");
@@ -80,12 +80,12 @@ public class WalletExample {
 		
 		System.out.println("---------获得支付路径并支付---------");
 		Wallet wallet3 = new Wallet("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa","snqFcHzRe22JTM8j7iZVpQYzxEEbW"); 
-		JingtumAmount jtc = new JingtumAmount(); //构建支付的货币
+		Amount jtc = new Amount(); //构建支付的货币
 		jtc.setValue(100); //金额
 		//jtc.setCounterparty("jBciDE8Q3uJjf111VeiUNM775AMKHEbBLS");
 		//jtc.setCurrency(Jingtum.getCurrencyUSD());
 		jtc.setJingtumCurrency(usd); //或者采用上面注掉的方法
-		PaymentCollection pc = wallet3.getPaymentPath("jHb9CJAWyB4jr91VRWn96DkukG4bwdtyTh",jtc); //获得支付路径
+		PaymentCollection pc = wallet3.getPathList("jHb9CJAWyB4jr91VRWn96DkukG4bwdtyTh",jtc); //获得支付路径
 		Payment pay = null;
 		Iterator<Payment> it_2 = pc.getData().iterator();
 		Integer j = 0;
@@ -106,7 +106,7 @@ public class WalletExample {
 			System.out.println(pay.getPaths());
 		
 		}
-		RequestResult payment = wallet3.pay(pay, true, Utility.getUID() ); //支付，参数为：获取方地址，货币，是否等待支付结果，和资源号（选填）
+		RequestResult payment = wallet3.submitPayment(pay, true, FinGate.getInstance().getNextUUID() ); //支付，参数为：获取方地址，货币，是否等待支付结果，和资源号（选填）
 		System.out.println(payment.getHash()); //交易hash值
 		System.out.println(payment.getClient_resource_id()); //交易资源号
 		System.out.println(payment.getSuccess()); //交易是否成功
@@ -117,12 +117,12 @@ public class WalletExample {
 		
 		System.out.println("---------支付---------");
 		Wallet wallet5 = new Wallet("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa","snqFcHzRe22JTM8j7iZVpQYzxEEbW");
-		JingtumAmount jtc5 = new JingtumAmount(); //构建支付的货币
+		Amount jtc5 = new Amount(); //构建支付的货币
 		jtc5.setValue(100); //金额
 		//jtc5.setCounterparty("jBciDE8Q3uJjf111VeiUNM775AMKHEbBLS");
 		//jtc5.setCurrency(Jingtum.getCurrencyUSD()); 
 		jtc5.setJingtumCurrency(usd);  //或者采取上面注掉的方法直接设定
-		RequestResult rr = wallet5.pay("jHb9CJAWyB4jr91VRWn96DkukG4bwdtyTh",jtc5, true, Utility.getUID() ); //支付，参数为：获取方地址，货币，是否等待支付结果，和资源号（选填）
+		RequestResult rr = wallet5.submitPayment("jHb9CJAWyB4jr91VRWn96DkukG4bwdtyTh",jtc5, true, FinGate.getInstance().getNextUUID() ); //支付，参数为：获取方地址，货币，是否等待支付结果，和资源号（选填）
 		System.out.println(rr.getHash()); //交易hash值
 		System.out.println(rr.getClient_resource_id()); //交易资源号
 		System.out.println(rr.getSuccess()); //交易是否成功
@@ -135,7 +135,7 @@ public class WalletExample {
 		Wallet wallet4 = new Wallet("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa","snqFcHzRe22JTM8j7iZVpQYzxEEbW");
 		
 		//Wallet wallet4 = new Wallet("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa");
-		Payment payment2 = wallet4.getPaymentByID("616FEF2ED71147476D657E5B54F120AFB5F4A4F9FEC721BB37B405540A1A77EB"); 
+		Payment payment2 = wallet4.getPayment("616FEF2ED71147476D657E5B54F120AFB5F4A4F9FEC721BB37B405540A1A77EB"); 
 		System.out.println(payment2.getHash());
 		System.out.println(payment2.getClient_resource_id());
 		System.out.println(payment2.getSuccess());
@@ -152,7 +152,7 @@ public class WalletExample {
 		System.out.println("---------获取全部 Payments 信息---------");
 		Wallet wallet6 = new Wallet("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa","snqFcHzRe22JTM8j7iZVpQYzxEEbW");
 		
-		PaymentCollection pc2 = wallet6.getPayments(null,null,false,Payment.Direction.all,2,3);
+		PaymentCollection pc2 = wallet6.getPaymentList(null,null,false,Payment.Direction.all,2,3);
 		Payment pay2;
 		Iterator<Payment> it_3 = pc2.getData().iterator();
 		Integer x = 0;

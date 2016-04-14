@@ -48,7 +48,7 @@ public class RelationExample {
 
 		Wallet wallet = new Wallet("js4UaG1pjyCEi9f867QHJbWwD3eo6C5xsa","snqFcHzRe22JTM8j7iZVpQYzxEEbW");; //根据井通地址生成钱包
 		System.out.println("---------获取relationship---------");
-		RelationCollection rc = wallet.getRelations(RelationType.authorize,null,null,null);//参数均为可选参数
+		RelationCollection rc = wallet.getRelationList(RelationType.authorize,null,null,null);//参数均为可选参数
 		//RelationCollection rc = wallet.getRelations(); //或者不加过滤条件
 		Iterator<Relation> it = rc.getData().iterator();
 		Integer i = 0;
@@ -82,7 +82,7 @@ public class RelationExample {
 		RelationAmount currency = new RelationAmount();
 		currency.setIssuer("janxMdrWE2SUzTqRUtfycH4UGewMMeHa9f"); //Currency issuer
 		currency.setCurrency("CNY");
-		RequestResult pr2 = wallet.deleteRelation(RelationType.authorize, "jsTo3VKjQrgDKdm5iQdMjc9YqDfrWJn1hw", currency, true);
+		RequestResult pr2 = wallet.removeRelation(RelationType.authorize, "jsTo3VKjQrgDKdm5iQdMjc9YqDfrWJn1hw", currency, true);
 		System.out.println(pr2.getFee());
 		System.out.println(pr2.getHash());
 		System.out.println(pr2.getSuccess());
@@ -92,7 +92,7 @@ public class RelationExample {
 		
 		System.out.println("---------获取counterparty relationship---------");
 		Wallet wallet2 = new Wallet("jsTo3VKjQrgDKdm5iQdMjc9YqDfrWJn1hw","sseBFE4ZydZCaVEYctv6UedGnbnwn");
-		RelationCollection rc2 = wallet2.getCounterpartyRelations(Relation.RelationType.all,null,null,null); //关系类型，地址，关系数，marker
+		RelationCollection rc2 = wallet2.getCoRelationList(Relation.RelationType.all,null,null,null); //关系类型，地址，关系数，marker
 		//RelationCollection rc2 = wallet2.getCounterpartyRelations(); 不带参数获取所有
 		Iterator<Relation> it2 = rc2.getData().iterator();
 		Integer j = 0;
