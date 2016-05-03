@@ -1,0 +1,12 @@
+jingtumsdk V0.2.20.dev0	2016/04/29
+
+FinGate
+	.setTest()			没有实现
+	.getServerInfo()	没有属性 ['api']
+	.setTTongServer()	没有该方法调用
+	.activeWallet()		v1 api 不能激活
+	.getNextUUID()		可能分辨率不够，不足于支持并发
+
+Wallet
+	.isActive()			依赖 .getBalance() 或者其他调用
+
