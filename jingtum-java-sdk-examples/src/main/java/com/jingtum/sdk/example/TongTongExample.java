@@ -85,7 +85,7 @@ public class TongTongExample {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		IssueRecord ir = FinGate.getInstance().issueRecord(orderNumber);
+		IssueRecord ir = FinGate.getInstance().queryIssue(orderNumber);
 		System.out.println(ir.getAccount());
 		System.out.println(ir.getAmount());
 		System.out.println(ir.getCurrency());
@@ -95,7 +95,7 @@ public class TongTongExample {
 		System.out.println(ir.getTxHash());
 		
 		System.out.println("================query custom tum status================");
-		TumInfo ti = FinGate.getInstance().tumInfo("8300000027000020160415201704150120000003");
+		TumInfo ti = FinGate.getInstance().queryCustomTum("8300000027000020160415201704150120000003");
 		System.out.println(ti.getCurrency());
 		System.out.println(ti.getName());
 		System.out.println(ti.getCirculation());
