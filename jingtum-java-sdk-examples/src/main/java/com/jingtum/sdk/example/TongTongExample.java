@@ -19,6 +19,7 @@
  * under the License.
  * 
  */
+
 package com.jingtum.sdk.example;
 
 import java.util.Iterator;
@@ -33,7 +34,8 @@ import com.jingtum.exception.InvalidRequestException;
 import com.jingtum.model.Balance;
 import com.jingtum.model.BalanceCollection;
 import com.jingtum.model.FinGate;
-import com.jingtum.model.TongTong;
+import com.jingtum.model.IssueRecord;
+import com.jingtum.model.TumInfo;
 import com.jingtum.model.Wallet;
 
 //http://developer.jingtum.com/tongtong-start.html
@@ -52,12 +54,9 @@ public class TongTongExample {
 		System.out.println(wallet.getSecret());
 		FinGate.getInstance().activateWallet(wallet.getAddress());
 		
-		TongTong tt = FinGate.getInstance().issueCustomTum(orderNumber, "8300000027000020160415201704150120000003", 5, wallet.getAddress());
-		System.out.println(tt.getCmd());
-		System.out.println(tt.getSystemCode());
-		System.out.println(tt.getCustomerCode());
-		System.out.println(tt.getErrorMsg());
-		System.out.println(tt.getHmac());
+		boolean isSuccessful = FinGate.getInstance().issueCustomTum(orderNumber, "8300000027000020160415201704150120000003", 5, wallet.getAddress());
+		System.out.println(isSuccessful);
+
 		
 		System.out.println("================wallet balance================");
 		
@@ -86,39 +85,28 @@ public class TongTongExample {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		TongTong tt2 = FinGate.getInstance().queryIssue(orderNumber);
-		System.out.println(tt2.getCmd());
-		System.out.println(tt2.getSystemCode());
-		System.out.println(tt2.getCustomerCode());
-		System.out.println(tt2.getOrderNumber());
-		System.out.println(tt2.getCustomTum());
-		System.out.println(tt2.getCirculation());
-		System.out.println(tt2.getCustomTumAccount());
-		System.out.println(tt2.getIssueDate());
-		System.out.println(tt2.getTransactionHash());
-		System.out.println(tt2.isIssueStatus());
-		System.out.println(tt2.getHmac());
+		IssueRecord ir = FinGate.getInstance().issueRecord(orderNumber);
+		System.out.println(ir.getAccount());
+		System.out.println(ir.getAmount());
+		System.out.println(ir.getCurrency());
+		System.out.println(ir.getDate());
+		System.out.println(ir.getOrder());
+		System.out.println(ir.getStatus());
+		System.out.println(ir.getTxHash());
 		
 		System.out.println("================query custom tum status================");
-		TongTong tt3 = FinGate.getInstance().getCustomTumStatus("8300000027000020160415201704150120000003");
-		System.out.println(tt3.getCmd());
-		System.out.println(tt3.getSystemCode());
-		System.out.println(tt3.getCustomerCode());
-		System.out.println(tt3.getCustomTum());
-		System.out.println(tt3.getCustomTumName());
-		System.out.println(tt3.getCirculation());
-		System.out.println(tt3.getCustomTumStatus());
-		System.out.println(tt3.getStartDate());
-		System.out.println(tt3.getEndDate());
-		System.out.println(tt3.getDescription());
-		System.out.println(tt3.getBaseUnit());
-		System.out.println(tt3.getCredit());
-		System.out.println(tt3.getType());
-		System.out.println(tt3.isSubdividable());
-		System.out.println(tt3.isForbidden());
-		System.out.println(tt3.isExchangeable());
-		System.out.println(tt3.isExchangeableWithSWT());
-		System.out.println(tt3.getPicURL());
-		System.out.println(tt3.getHmac());
+		TumInfo ti = FinGate.getInstance().tumInfo("8300000027000020160415201704150120000003");
+		System.out.println(ti.getCurrency());
+		System.out.println(ti.getName());
+		System.out.println(ti.getCirculation());
+		System.out.println(ti.getStatus());
+		System.out.println(ti.getStartDate());
+		System.out.println(ti.getEndDate());
+		System.out.println(ti.getDescription());
+		System.out.println(ti.getValue());
+		System.out.println(ti.getCredit());
+		System.out.println(ti.getType());
+		System.out.println(ti.getFlags());
+		System.out.println(ti.getLogoUrl());
 	}
 }
